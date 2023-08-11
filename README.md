@@ -17,7 +17,7 @@ add these columns to training data
 data = stock.history(period="max", actions=False)
 ```
 
-## 3. Technical Indicators:
+## 2. Technical Indicators:
 Technical indicators are mathematical calculations based on price and volume data that help identify trends, momentum, and potential turning points in a stock's price. Examples include moving averages, Relative Strength Index (RSI), Moving Average Convergence Divergence (MACD), and Bollinger Bands.
 
 ### Exponential Moving Average (EMA)
@@ -51,7 +51,7 @@ data['LowerBand'] = data['EMA'] - 2 * data['Deviation']
 ```
 
 ### Stochastic Oscillator
-
+`%K = 100 * ((Latest Close - Lowest Low) / (Highest High - Lowest Low))`
 ```
 data['%K'] = 100 * (data['Close'] - data['Low'].rolling(window=WINDOW).min()) / (data['High'].rolling(window=WINDOW).max() - data['Low'].rolling(window=WINDOW).min())
 ```
@@ -71,6 +71,28 @@ Some industries may be influenced by specific factors like regulatory changes, t
 
 ## 8. News and Events:
 Major news and events, such as earnings announcements, mergers and acquisitions, product launches, and legal issues, can cause significant price movements in individual stocks.
+
+### Solution
+- get ***news screener***
+
+### Keywords
+| HOT | Very Good | Good | OK |
+|:-:|:-:|:-:|:-:|
+| Positive Endpoint | Positive | Recives | Grants |
+| Positive CEO Statement | Top-Line | FDA | Any Large Sum of money |
+| Positive Italic Font | Significant | Approval | Investors |
+|  | Demonstrates | Benefit(s) / Benefitial | Accepted |
+|  | Treatment | Launches | New |
+|  | Agreement | Fast Track | Signs |
+|  | Partnership | Breakout | Merger |
+|  | Collaboration | Acquire(s) | Gain |
+|  | Improvement(s) | Acquisition |  |
+|  | Successful | Expand / Expansion |  |
+|  | Billionare | Contract |  |
+|  | Increase | Completes |  |
+|  | Awarded | Promising |  |
+|  | Primary | Achive(s) / Achivement(s) |  |
+
 
 ## 9. Correlations and Market Indices:
 Analyze how a particular stock correlates with broader market indices like the S&P 500 or sector-specific indices. Understanding these relationships can provide valuable insights into overall market trends.

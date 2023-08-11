@@ -3,12 +3,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-stock = yf.Ticker("TSLA")
+stock = yf.Ticker("^GSPC")
 
 # Load data
 data = stock.history(period="max", actions=False)
 
-WINDOW = 14
+WINDOW = 8
 
 # -----------------------Exponential Moving Average--------------------------
 data['EMA'] = data['Close'].ewm(span=WINDOW, adjust=False).mean()
@@ -57,14 +57,16 @@ data['%K'] = 100 * (data['Close'] - data['Low'].rolling(window=WINDOW).min()) / 
 # ======================= GRAPH ==========================
 
 # Plot the closing prices, Bollinger Bands, and SMA
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(16, 9))
 plt.plot(data['Close'], label='Closing Price', color='blue')
 plt.plot(data['EMA'], label='Exponential Moving Average', color='green')
 plt.plot(data['RSI'], label='Relative Strength Index', color='yellow')
 plt.plot(data['%K'], label='Stochastic Oscillator', color='purple')
+
 plt.plot(data['UpperBand'], label='Upper Bollinger Band', color='red', linestyle='dashed')
 plt.plot(data['LowerBand'], label='Lower Bollinger Band', color='red', linestyle='dashed')
 plt.fill_between(data.index, data['UpperBand'], data['LowerBand'], color='gray', alpha=0.2)
+
 plt.xlabel('Date')
 plt.ylabel('Price')
 plt.title('TSLA')
