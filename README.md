@@ -13,6 +13,7 @@ add these columns to training data
 - Low
 - Close
 - Volume
+
 ```
 data = stock.history(period="max", actions=False)
 ```
@@ -60,14 +61,18 @@ data['%K'] = 100 * (data['Close'] - data['Low'].rolling(window=WINDOW).min()) / 
 ## 4. Fundamental Data:
 Consider fundamental data related to the company, such as earnings reports, revenue, profit margins, debt levels, and dividend history. These factors can influence a company's valuation and, consequently, its stock price.
 
+
 ## 5. Market Sentiment:
 Sentiment analysis involves gauging the overall sentiment and opinion of market participants about a stock or the market as a whole. Positive or negative sentiment can influence stock prices.
+
 
 ## 6. Economic Indicators:
 Economic indicators, such as GDP growth, inflation rates, interest rates, and unemployment data, can impact the overall market and specific industries, affecting stock prices.
 
+
 ## 7. Industry-specific Factors:
 Some industries may be influenced by specific factors like regulatory changes, technological advancements, or geopolitical events. Understanding these industry-specific influences is crucial for accurate predictions.
+
 
 ## 8. News and Events:
 Major news and events, such as earnings announcements, mergers and acquisitions, product launches, and legal issues, can cause significant price movements in individual stocks.
@@ -97,11 +102,14 @@ Major news and events, such as earnings announcements, mergers and acquisitions,
 ## 9. Correlations and Market Indices:
 Analyze how a particular stock correlates with broader market indices like the S&P 500 or sector-specific indices. Understanding these relationships can provide valuable insights into overall market trends.
 
+
 ## 10. Market Order Flow:
 Monitoring the flow of buy and sell orders (order flow) can reveal real-time market dynamics and supply-demand imbalances, impacting short-term price movements.
 
+
 ## 11. Volatility:
 Consider the historical volatility of the stock, which indicates the magnitude of price fluctuations over time. Higher volatility can lead to greater risks and potential rewards.
+
 
 ## 12. Seasonality:
 Some stocks exhibit seasonal patterns based on specific events, economic cycles, or consumer behavior.
