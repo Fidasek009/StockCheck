@@ -69,7 +69,7 @@ plt.fill_between(data.index, data['UpperBand'], data['LowerBand'], color='gray',
 
 plt.xlabel('Date')
 plt.ylabel('Price')
-plt.title('TSLA')
+plt.title('S&P500')
 plt.legend()
 plt.show()
 

@@ -9,9 +9,9 @@ Historical stock price data is fundamental for any stock price prediction model.
 ### Solution
 add these columns to training data
 - Open
+- Close
 - High
 - Low
-- Close
 - Volume
 
 ```
@@ -78,7 +78,9 @@ Some industries may be influenced by specific factors like regulatory changes, t
 Major news and events, such as earnings announcements, mergers and acquisitions, product launches, and legal issues, can cause significant price movements in individual stocks.
 
 ### Solution
-- get ***news screener***
+- get ***news screener*** (eg.: https://www.alphavantage.co/documentation/#news-sentiment)
+- When to fetch the news?
+- How to translate the news into the dataset?
 
 ### Keywords
 | HOT | Very Good | Good | OK |
@@ -113,3 +115,6 @@ Consider the historical volatility of the stock, which indicates the magnitude o
 
 ## 12. Seasonality:
 Some stocks exhibit seasonal patterns based on specific events, economic cycles, or consumer behavior.
+
+### Solution
+- Put the current quartal into dataset?

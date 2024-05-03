@@ -1,3 +1,4 @@
 yfinance
 colorama
 matplotlib
+python-dotenv
