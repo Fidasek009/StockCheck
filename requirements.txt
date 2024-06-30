@@ -2,3 +2,4 @@ yfinance
 colorama
 matplotlib
 python-dotenv
+tqdm
