@@ -69,6 +69,12 @@ Sentiment analysis involves gauging the overall sentiment and opinion of market 
 ## 6. Economic Indicators:
 Economic indicators, such as GDP growth, inflation rates, interest rates, and unemployment data, can impact the overall market and specific industries, affecting stock prices.
 
+- [NASDAQ Stock Screener](https://www.nasdaq.com/market-activity/stocks/screener)
+
+**API calls:**
+```
+https://api.nasdaq.com/api/screener/stocks?tableonly=true&limit=25&recommendation=strong_buy
+```
 
 ## 7. Industry-specific Factors:
 Some industries may be influenced by specific factors like regulatory changes, technological advancements, or geopolitical events. Understanding these industry-specific influences is crucial for accurate predictions.
