@@ -1,5 +1,6 @@
 yfinance
 colorama
 matplotlib
+mplfinance
 python-dotenv
 tqdm
