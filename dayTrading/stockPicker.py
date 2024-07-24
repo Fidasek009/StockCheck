@@ -22,7 +22,7 @@ HIGH_VOLATILITY = 0.4
 
 
 def check_avaliability(instrument: yf.Ticker) -> bool:
-    return instrument.history(period='1d', actions=False, raise_errors=True).empty
+    return instrument.fast_info['lastPrice'] > 0
 
 
 def check_volume(instrument: yf.Ticker) -> bool:
@@ -96,7 +96,7 @@ def test_instrument(ticker: str) -> str | None:
 
 
 if __name__ == "__main__":
-    data = pd.read_csv("instruments/instruments.csv")
+    data = pd.read_csv("instruments/avaliable_instruments.csv")
 
     # Using ThreadPoolExecutor to run test_instrument in parallel
     with ThreadPoolExecutor(max_workers=20) as executor:
