@@ -1,7 +1,6 @@
 # Docs: https://github.com/ranaroussi/yfinance
 import yfinance as yf
 from colorama import init, Fore
-from math import isnan
 init()
 
 stock = yf.Ticker(input(Fore.YELLOW + "Enter stock code: " + Fore.WHITE))
@@ -11,37 +10,39 @@ stock = yf.Ticker(input(Fore.YELLOW + "Enter stock code: " + Fore.WHITE))
 # total current assets / total current liabilities > 1
 print(Fore.BLUE, "1. Balance sheet:", end='')
 
-BS = stock.balance_sheet
-currentYear = BS.keys()[0]
-currentAssets = BS[currentYear].loc['Current Assets']
-currentLiabilities = BS[currentYear].loc['Current Liabilities']
-balanceSheet = round(currentAssets/currentLiabilities, 3)
+balance_sheet = stock.balance_sheet.T
+assets = balance_sheet['Current Assets'].dropna()[0]
+liabilities = balance_sheet['Current Liabilities'].dropna()[0]
+balance_sheet_ratio = assets / liabilities
 
-print(Fore.RED if balanceSheet < 1 else Fore.GREEN, balanceSheet)
+print(Fore.RED if balance_sheet_ratio < 1 else Fore.GREEN, '{:.2f}'.format(balance_sheet_ratio))
 
 
 # ------------------------ 2. Income statement ------------------------
 # (operating income / total revenue) * 100 > 15
 print(Fore.BLUE, "2. Income statement:", end='')
 
-IS = stock.income_stmt
-currentYear = IS.keys()[0]
-operatingIncome = IS[currentYear].loc['Operating Income']
-totalRevenue = IS[currentYear].loc['Total Revenue']
-incomeStatement = round((operatingIncome/totalRevenue)*100, 2)
+income_stmt = stock.income_stmt.T
+income = income_stmt['Operating Income'].dropna()[0]
+revenue = income_stmt['Total Revenue'].dropna()[0]
+income_ratio = (income / revenue) * 100
 
-print(Fore.RED if incomeStatement < 15 else Fore.GREEN, f"{incomeStatement} %")
+print(Fore.RED if income_ratio < 15 else Fore.GREEN, "{:.2f}%".format(income_ratio))
 
 
 # ------------------------ 3. Cashflow statement ------------------------
 # has increasing free cashflow
 print(Fore.BLUE, "3. Cashflow statement:", end='')
-CF = stock.cash_flow
-yearlyCashFlow = [CF[year].loc['Free Cash Flow'] for year in CF.keys()]
 
-for i in range(1, len(yearlyCashFlow)):
-    if isnan(yearlyCashFlow[i]):
-        continue
 
-    diff = round(100/(yearlyCashFlow[i]/(yearlyCashFlow[i-1] - yearlyCashFlow[i])), 2)
-    print(Fore.RED if diff < 0 else Fore.GREEN, f"{diff}%", end=' ')
+def adjusted_pct_change(previous, current):
+    if previous == 0:
+        return float('inf')
+    change = (current - previous) / abs(previous)
+    return change
+
+cashflow = stock.cash_flow.T['Free Cash Flow'].dropna().iloc[::-1]
+
+for i in range(len(cashflow) - 1):
+    change = adjusted_pct_change(cashflow[i], cashflow[i + 1])
+    print(Fore.RED if change < 0 else Fore.GREEN, "{:.2f}%".format(change * 100), end=' ')
