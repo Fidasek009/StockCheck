@@ -4,3 +4,8 @@ matplotlib
 mplfinance
 python-dotenv
 tqdm
+pandas
+numpy
+requests-cache
+requests-ratelimiter
+pyrate-limiter
