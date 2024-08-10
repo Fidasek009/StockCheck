@@ -1,7 +1,7 @@
 import yfinance as yf
 import pandas as pd
 import matplotlib.pyplot as plt
-from analysis_fetcher import analyst_price_targets
+from analysis_fetcher import Analysis
 
 
 def balance_sheet(stock: yf.Ticker) -> float:
@@ -30,7 +30,7 @@ def cashflow_statement(stock: yf.Ticker) -> list[float]:
     return changes
 
 def intrinsic_value(stock: yf.Ticker) -> float:
-    price_targets = analyst_price_targets(stock)
+    price_targets = Analysis(stock).analyst_price_targets
     return price_targets['low']
 
 

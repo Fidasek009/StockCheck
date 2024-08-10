@@ -1,7 +1,7 @@
 import yfinance as yf
 import pandas as pd
 import requests
-from analysis_fetcher import growth_estimates
+from analysis_fetcher import Analysis
 
 
 # ================================ HELPER FUNCTIONS ================================
@@ -67,7 +67,8 @@ def get_estimated_growth(stock: yf.Ticker) -> float:
     '''
     Fetch the growth estimates from Yahoo Finance API.
     '''
-    growth = growth_estimates(stock)['+5y']
+    growth_estimates = Analysis(stock).growth_estimates
+    growth = growth_estimates['stock']['+5y']
 
     if growth < 0:
         raise ValueError("Negative estimated growth is bad.")

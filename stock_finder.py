@@ -9,7 +9,7 @@ import numpy as np
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial
 from intrinsic_valuation import dcf_value, graham_value, lynch_value
-from analysis_fetcher import analyst_price_targets
+from analysis_fetcher import Analysis
 from requests import Session
 from requests_cache import CacheMixin, SQLiteCache
 from requests_ratelimiter import LimiterMixin, MemoryQueueBucket
@@ -128,19 +128,19 @@ def test_undervaluation(instrument: yf.Ticker) -> bool:
 
 # -----------------
 
-MIN_ANALYST_UNDERVALUATION = 0.3
+MIN_ANALYST_UNDERVALUATION = 0.2
 
 def test_analyst_undervaluation(instrument: yf.Ticker) -> bool:
     '''
     Test if the stock is undervalued based on analyst valuation.
     '''
-    price_targets = analyst_price_targets(instrument)
+    price_targets = Analysis(instrument).analyst_price_targets
     return price_targets['current'] < (1 - MIN_ANALYST_UNDERVALUATION) * price_targets['low']
 
 # -----------------
 
 MIN_ANALYSTS = 5
-MIN_STRONG_BUY = 0.5
+MIN_STRONG_BUY = 0.4
 
 def test_recommendations(instrument: yf.Ticker) -> bool:
     '''
@@ -157,7 +157,7 @@ def test_recommendations(instrument: yf.Ticker) -> bool:
 # ================= RUNNERS =================
 
 def run_tests(ticker: str, testers: list[callable], session) -> str | None:
-    msg = f"{ticker}\t"
+    msg = f'{ticker}\t'
     ticker = str(ticker)
 
     try:
@@ -166,11 +166,11 @@ def run_tests(ticker: str, testers: list[callable], session) -> str | None:
         for tester in testers:
             if not tester(instrument):
                 raise Exception(tester.__name__)
-            msg += "✔️ "
+            msg += '✔️ '
 
-        print(f"{msg}✅")
+        print(f'{msg}✅')
     except Exception as e:
-        print(f"{msg}❌", e)
+        print(f'{msg}❌', e)
         ticker = None
     finally:
         return ticker
@@ -181,7 +181,7 @@ def run_threads(data: pd.DataFrame, testers: list[callable], threads: int) -> pd
     session = CachedLimiterSession(
         limiter=Limiter(RequestRate(limit=10, interval=1)),
         bucket_class=MemoryQueueBucket,
-        backend=SQLiteCache("stock-picker.cache"),
+        backend=SQLiteCache('stock-picker.cache'),
     )
     session.headers['User-agent'] = 'stock-picker/1.0'
     test = partial(run_tests, testers=testers, session=session)
@@ -212,8 +212,8 @@ recommendations = basic_financials + [test_recommendations]
 day_trading = basic_financials + [test_volume, test_volatility]
 
 
-if __name__ == "__main__":
-    data = pd.read_csv("instruments/avaliable_instruments.csv")
+if __name__ == '__main__':
+    data = pd.read_csv('instruments/avaliable_instruments.csv')
     testers = analyst_undervaluation
     results = run_threads(data, testers, 10)
-    results.to_csv("instruments/filtered_instruments.csv", index=False)
+    results.to_csv('instruments/filtered_instruments.csv', index=False)
