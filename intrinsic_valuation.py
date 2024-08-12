@@ -212,7 +212,7 @@ if __name__ == '__main__':
         ddm = ddm_value(stock)
         print("DDM: ${:.2f}".format(ddm))
     except ValueError as e:
-        print(e)
+        print("DDM:", e)
 
     dcf = dcf_value(stock, 5)
     print("DCF: ${:.2f}".format(dcf))
@@ -220,9 +220,11 @@ if __name__ == '__main__':
     graham = graham_value(stock)
     print("Graham: ${:.2f}".format(graham))
 
-    lynch = lynch_value(stock)
-    print("Lynch: ${:.2f}".format(lynch))
+    try:
+        lynch = lynch_value(stock)
+        print("Lynch: ${:.2f}".format(lynch))
+    except KeyError:
+        print("Lynch: Company doesn't pay dividends.")
 
-    weighted_average = dcf * 0.6 + graham * 0.3 + lynch * 0.1
-
-    print("{} value: ${:.2f}".format(ticker, weighted_average))
+    avg = dcf * 0.7 + graham * 0.3
+    print("{} value: ${:.2f}".format(ticker, avg))

@@ -36,16 +36,16 @@ class Analysis:
             self._fetch_earnings_trend()
 
         data_dict = {
+            'numberOfAnalysts': [],
             'avg': [],
             'low': [],
             'high': [],
             'yearAgoEps': [],
-            'numberOfAnalysts': [],
             'growth': []
         }
         periods = []
 
-        for item in self._earnings_trend[:-2]:
+        for item in self._earnings_trend[:4]:
             periods.append(item['period'])
             earnings_estimate = item.get('earningsEstimate', {})
 
@@ -64,16 +64,16 @@ class Analysis:
             self._fetch_earnings_trend()
 
         data_dict = {
+            'numberOfAnalysts': [],
             'avg': [],
             'low': [],
             'high': [],
             'yearAgoRevenue': [],
-            'numberOfAnalysts': [],
             'growth': []
         }
         periods = []
 
-        for item in self._earnings_trend[:-2]:
+        for item in self._earnings_trend[:4]:
             periods.append(item['period'])
             revenue_estimate = item.get('revenueEstimate', {})
 
@@ -92,11 +92,10 @@ class Analysis:
         earnings_history = earnings_history['quoteSummary']['result'][0]['earningsHistory']['history'] if earnings_history else []
 
         data_dict = {
-            'epsActual': [],
             'epsEstimate': [],
+            'epsActual': [],
             'epsDifference': [],
-            'surprisePercent': [],
-            'quarter': []
+            'surprisePercent': []
         }
         periods = []
 
@@ -126,7 +125,7 @@ class Analysis:
         }
         periods = []
 
-        for item in self._earnings_trend[:-2]:
+        for item in self._earnings_trend[:4]:
             periods.append(item['period'])
             eps_trend = item.get('epsTrend', {})
 
@@ -152,7 +151,7 @@ class Analysis:
         }
         periods = []
 
-        for item in self._earnings_trend[:-2]:
+        for item in self._earnings_trend[:4]:
             periods.append(item['period'])
             eps_revisions = item.get('epsRevisions', {})
 
@@ -225,7 +224,8 @@ class Analysis:
             ('targetMedianPrice', 'median'),
         ]
 
-        return {newKey: data.get(oldKey, None) for oldKey, newKey in keys}
+        self._analyst_price_targets = {newKey: data.get(oldKey, None) for oldKey, newKey in keys}
+        return self._analyst_price_targets
 
 
 # ================= TESTS =================
