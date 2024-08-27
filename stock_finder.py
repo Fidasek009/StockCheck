@@ -9,7 +9,6 @@ import numpy as np
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial
 from intrinsic_valuation import dcf_value, graham_value, lynch_value
-from analysis_fetcher import Analysis
 from requests import Session
 from requests_cache import CacheMixin, SQLiteCache
 from requests_ratelimiter import LimiterMixin, MemoryQueueBucket
@@ -128,14 +127,14 @@ def test_undervaluation(instrument: yf.Ticker) -> bool:
 
 # -----------------
 
-MIN_ANALYST_UNDERVALUATION = 0.2
+MIN_ANALYST_UNDERVALUATION = 0.5
 
 def test_analyst_undervaluation(instrument: yf.Ticker) -> bool:
     '''
     Test if the stock is undervalued based on analyst valuation.
     '''
-    price_targets = Analysis(instrument).analyst_price_targets
-    return price_targets['current'] < (1 - MIN_ANALYST_UNDERVALUATION) * price_targets['low']
+    price_targets = instrument.analyst_price_targets
+    return price_targets['current'] * (1 + MIN_ANALYST_UNDERVALUATION) < price_targets['mean']
 
 # -----------------
 
@@ -177,9 +176,9 @@ def run_tests(ticker: str, testers: list[callable], session) -> str | None:
 
 # -----------------
 
-def run_threads(data: pd.DataFrame, testers: list[callable], threads: int) -> pd.DataFrame:
+def run_threads(data: pd.DataFrame, testers: list[callable], threads: int, requests_per_sec: int) -> pd.DataFrame:
     session = CachedLimiterSession(
-        limiter=Limiter(RequestRate(limit=10, interval=1)),
+        limiter=Limiter(RequestRate(limit=requests_per_sec, interval=1)),
         bucket_class=MemoryQueueBucket,
         backend=SQLiteCache('stock-picker.cache'),
     )
@@ -215,5 +214,5 @@ day_trading = basic_financials + [test_volume, test_volatility]
 if __name__ == '__main__':
     data = pd.read_csv('instruments/avaliable_instruments.csv')
     testers = analyst_undervaluation
-    results = run_threads(data, testers, 10)
+    results = run_threads(data, testers, 10, 10)
     results.to_csv('instruments/filtered_instruments.csv', index=False)

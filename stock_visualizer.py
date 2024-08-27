@@ -1,7 +1,6 @@
 import yfinance as yf
 import pandas as pd
 import matplotlib.pyplot as plt
-from analysis_fetcher import Analysis
 
 
 def balance_sheet(stock: yf.Ticker) -> float:
@@ -29,9 +28,13 @@ def cashflow_statement(stock: yf.Ticker) -> list[float]:
     changes = [adjusted_pct_change(cashflow[i], cashflow[i + 1]) for i in range(len(cashflow) - 1)]
     return changes
 
+
+def analyst_targets(stock: yf.Ticker) -> dict[str, float]:
+    return stock.analyst_price_targets
+
+
 def intrinsic_value(stock: yf.Ticker) -> float:
-    price_targets = Analysis(stock).analyst_price_targets
-    return price_targets['low']
+    return stock.analyst_price_targets['low']
 
 
 def create_plot(stock: yf.Ticker):
@@ -61,6 +64,10 @@ def create_plot(stock: yf.Ticker):
     one_year = stock.history(period="1y", interval="5d")
     ax2.plot(one_year['Close'])
     ax2.set_title('1 year')
+    _targers = analyst_targets(stock)
+    ax2.axhline(y=_targers['low'], color='green', linestyle='--')
+    ax2.axhline(y=_targers['mean'], color='orange', linestyle='--')
+    ax2.axhline(y=_targers['high'], color='red', linestyle='--')
 
     # 3. stock analysis
 

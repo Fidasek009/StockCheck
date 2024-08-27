@@ -1,8 +1,6 @@
 import yfinance as yf
 import pandas as pd
 import requests
-from analysis_fetcher import Analysis
-
 
 # ================================ HELPER FUNCTIONS ================================
 
@@ -67,8 +65,7 @@ def get_estimated_growth(stock: yf.Ticker) -> float:
     '''
     Fetch the growth estimates from Yahoo Finance API.
     '''
-    growth_estimates = Analysis(stock).growth_estimates
-    growth = growth_estimates['stock']['+5y']
+    growth = stock.growth_estimates['stock']['+5y']
 
     if growth < 0:
         raise ValueError("Negative estimated growth is bad.")
@@ -207,6 +204,7 @@ def lynch_value(stock: yf.Ticker) -> float:
 if __name__ == '__main__':
     ticker = 'AAPL'
     stock = yf.Ticker(ticker)
+    print("------", ticker, "Intrinsic Valuation", "------")
 
     try:
         ddm = ddm_value(stock)
@@ -227,4 +225,8 @@ if __name__ == '__main__':
         print("Lynch: Company doesn't pay dividends.")
 
     avg = dcf * 0.7 + graham * 0.3
-    print("{} value: ${:.2f}".format(ticker, avg))
+    print("Intrinsic value: ${:.2f}".format(avg))
+
+    analysts = stock.analyst_price_targets
+    print(f"Analyst mean: ${analysts['mean']}")
+    print(f"Current price: ${analysts['current']}")
